@@ -1,0 +1,48 @@
+{
+  "validated_date": "2026-09-28",
+  "platform": "Windows 11 x64",
+  "gpu": "NVIDIA RTX 4070 12GB (SM89)",
+  "comfyui_version": "0.37.0",
+  "comfyui_commit": "1568e6cfd04586a4b3c4e1817ea7dde09b1bf9e7",
+  "python": "3.13.13",
+  "python_packages": {
+    "torch": "2.14.0+cu130",
+    "comfy-kitchen": "0.2.35",
+    "comfy-aimdo": "0.5.5",
+    "safetensors": "0.8.0",
+    "triton-windows": "3.8.0.post28"
+  },
+  "native": {
+    "build_id": "native-v11",
+    "abi": 4,
+    "dll": "h3_int8_attention_v5.dll",
+    "sha256": "c8c150a068c3bc1e320a00b5063b02b2ffc5edc6f24279e35f2deeaebc61afb2"
+  },
+  "gpu_scope": "Native INT4 SM8x path is required; no CPU/INT8 fallback. Other GPUs require independent validation.",
+  "end_to_end_validation": {
+    "date": "2026-09-30",
+    "comfyui_version": "0.38.0",
+    "comfyui_commit": "fb2315f11db0ebfaafa9099a5df5227dc6bb42bc",
+    "python_environment": "Existing dedicated ComfyUI venv reused without pip changes",
+    "torch": "2.14.0+cu130",
+    "comfy-kitchen": "0.2.35",
+    "comfy-aimdo": "0.5.5",
+    "triton-windows": "3.8.0.post28",
+    "gpu": "NVIDIA RTX 4070 12GB (SM89)",
+    "successful_videos": 1,
+    "model_downloads": 0,
+    "fc1_cache": "50 verified unmerged FC1 shards reused by hard links",
+    "workflow": "workflows/TaoMate_C3.api.json",
+    "source_workflow_sha256": "805861acf8314357244d4a96718185e56c2bb5572a5c4e6696dde8c3717eca80",
+    "prompt_seconds": 172.29,
+    "resolution": [
+      1024,
+      1792
+    ],
+    "frames": 124,
+    "fps": 24,
+    "audio": "AAC, 32000 Hz",
+    "full_decode": "PASS",
+    "fresh_fc1_conversion": false
+  }
+}

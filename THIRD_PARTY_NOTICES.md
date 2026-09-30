@@ -1,0 +1,11 @@
+# Sources and third-party notices
+
+- `cache.py` and `convert.py` derive from the author's [ComfyUI-MiniMax-H3-W4A4-VSA](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-W4A4-VSA), including the later FC1-only support used in the C2/C3 experiments. Both files are copied byte-for-byte from the adopted local sources, under GPL-3.0-only. C2/C3 implementation files are the author's experiment code, also distributed here under GPL-3.0-only. See `docs/source-provenance.json` for hashes.
+- [ComfyUI](https://github.com/Comfy-Org/ComfyUI): native MiniMax H3 model, quantized model loading, ConvRot and Dynamic VRAM APIs. ComfyUI itself is not included.
+- [comfy-kitchen](https://github.com/Comfy-Org/comfy-kitchen): native ConvRot W4A4 / INT8 operations. The existing ComfyUI Python supplies this dependency; no binary is bundled or installed by pip here.
+- [H3-Optimizations](https://github.com/Zironic/H3-Optimizations): sparse attention, memory policy, HeldMLP and HeldConvRotINT8Linear APIs. Setup fetches the locked upstream checkout unchanged, including native binaries, source and original notices. No upstream Python source or DLL is redistributed inside this package. Upstream's `native/LICENSE`, `native/NOTICE.upstream` and `native/third_party` remain in its own checkout; do not apply this package's GPL declaration to the entire external project.
+- [ComfyUI-MiniMax-H3-MotionCache-FastVAE](https://github.com/Mozer/ComfyUI-MiniMax-H3-MotionCache-FastVAE): FastVAE decode, fetched separately at the locked commit with its MIT license (copyright 2026 starsFriday). MotionCache is not used by the supplied workflow.
+- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes): the C2 loop preserves the tested FFN8 chunk boundaries and output assignment behavior used by the earlier baseline. The KJNodes package is not needed at runtime for this workflow.
+- [TaoMate H3 3-step](https://huggingface.co/CZMartin22/TaoMate-H3-3step-ComfyUI): LoRA and three-step sampling schedule. Models and their licenses remain at their respective publishers; see `docs/MODELS.md`.
+
+`examples/first_frame.png` is the same generated first-frame image used by this project's benchmark. It contains no model weights. Generated benchmark videos, model files, converted weights, and local machine credentials are not included.

@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.setup/
+tmp/
+*.log
+*.mp4
+*.webm
+*.wav
+*.safetensors
+*.pth
+*.pt
+models/
+h3_preconverted/

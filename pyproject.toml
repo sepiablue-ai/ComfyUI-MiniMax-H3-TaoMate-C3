@@ -1,0 +1,12 @@
+[project]
+name = "comfyui-minimax-h3-taomate-c3"
+version = "0.1.0"
+description = "TaoMate H3 3-step C3: FC1 W4A4, sparse attention, held FFN8 and attention out"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-only" }
+dependencies = []
+
+[tool.comfy]
+DisplayName = "MiniMax H3 TaoMate C3"
+requires-comfyui = ">=0.37.0"

@@ -1,0 +1,26 @@
+{
+  "source_graph_sha256": "c94b6091c9bc385a0d5b0cc40fd2da191c422330a866253ebc94c43fa35550c0",
+  "source_prompt_sha256": "cdd7e76bffc56edc731ed1ce56a114c3a77c8c117f1f7a37d24dcfd40d3e766e",
+  "input_image_sha256": "9d9e9b8797fc357e73b98fb808a99556c908991bed47ca275fbf3e2294688a09",
+  "unchanged_sources": {
+    "cache.py": "daa838c4e4400734e1eb9e98c4cd2a5a24127a0d55b568fc15536be9c56a4537",
+    "convert.py": "5db83b4f6341094974d237286b72849ad2e62a3ea56383bdeede4f2998f30524",
+    "runtime/h3_c2_held_ffn8.py": "cccc9af20d74aaa00e4b4b166af34fc09cce8906471331c908d9116e3fe25d8c",
+    "runtime/h3_c3_held_out.py": "d3e9df9eea4f1bf8cf8d5427d682e1447cbf8ef9c6a3a9ec3c229a2fd8de2a95"
+  },
+  "portable_changes": [
+    "loader node ID H3V2PreconvertedLoader -> H3TaoMateW4A4Loader",
+    "cache directory -> models-relative h3_preconverted/taomate_c3_fc1",
+    "same-byte first image -> taomate_c3/first_frame.png",
+    "output prefix and display-only node titles"
+  ],
+  "preserved": "prompt, seed, all numerical parameters, model filenames, node links, C2/C3 computations",
+  "historical_results": {
+    "c2_normal_warm_seconds": 149.392,
+    "c3_normal_warm_seconds": 145.021,
+    "paired_completed_videos": 10,
+    "decoded_video_and_pcm": "EXACT for each same-seed C2/C3 pair",
+    "later_c3_control_warm_seconds": 143.521,
+    "fp16_accumulation_adopted": false
+  }
+}
