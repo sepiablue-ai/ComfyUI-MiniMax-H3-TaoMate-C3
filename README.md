@@ -2,7 +2,29 @@
 
 日本語 | [English](README.en.md)
 
-TaoMate-H3を**RTX 4070 12GBで利用するためのComfyUI最適化パッケージ**です。TaoMate 3-step、FC1 W4A4、sparse attention 10%、Held FFN8、Held Attention Outを組み合わせ、Windowsセットアップとサンプルworkflowを提供します。**1024×1792・124フレーム・音声付きの実生成を確認済み**です。
+**TaoMate-H3（3stepで生成できるよう蒸留したMiniMax H3）を、RTX 4070 12GBで1024×1792・音声付き約2分27秒で生成するComfyUI最適化パッケージです。** Windowsセットアップとサンプルworkflowを同梱しています。
+
+| FL2VA（先頭画像1枚）・1024×1792・124フレーム | 生成時間 |
+|---|---:|
+| 4step・W4A4 + Streaming VSA 5%（TaoMateなし） | 218.2秒（3分38.2秒） |
+| TaoMate 3step + sparse attention 10% | 183.3秒（3分3.3秒） |
+| **本repo：TaoMate 3step + W4A4 + sparse 10% + 重み保持（C2/C3）** | **146.9秒（2分26.9秒）** |
+
+[さやかベンチマーク](https://sayakabenchmark.pages.dev/)のFL2VAタブ、case01の実測です（2026-09-30、各1回）。上から順にFL2VA [018](https://sayakabenchmark.pages.dev/benchmarks/fl2va/018-w4a4-streaming-vsa5-i2v/workflow.json)、[020](https://sayakabenchmark.pages.dev/benchmarks/fl2va/020-taomate-h3-fl2va-i2v-sparse10/workflow.json)、[021](https://sayakabenchmark.pages.dev/benchmarks/fl2va/021-taomate-h3-fl2va-i2v-c3-fastest/workflow.json)のworkflowです（番号はサイト上の登録番号）。2行目から3行目で約20%短縮していますが、動画VAEの復号方式の違い（通常VAE→FastVAE）も含みます。
+
+- **参考：** 544×960で生成し、[ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream)で1088×1920として保存する構成（FL2VA [016](https://sayakabenchmark.pages.dev/benchmarks/fl2va/016-taomate-3step-c3-sparse10-x2vae-int8-stream/workflow.json)）は51.7秒でした。このworkflowは本repoには同梱していません。
+
+**用語**
+
+| 用語 | 意味 |
+|---|---|
+| TaoMate 3step | Alibaba TaoLiveのLoRAで、H3を3stepで生成できるようにしたもの |
+| FC1 W4A4 | 各層のFFN前半（FC1）の重みと計算を4bitにする。変換は導入時に一度だけ |
+| sparse attention 10% | 重要なattentionだけを計算する（約10%を保持） |
+| C2（Held FFN8） | FFNを8分割で処理し、その重みを必要な範囲で保持して転送やcastを減らす |
+| C3（Held Attention Out） | attention出力層のINT8重みも同様に保持する。C2からさらに約3%短縮 |
+
+> 作者：かみもと（Kamimoto）｜検証結果の速報は **[X（@sep_is_heim）](https://x.com/sep_is_heim)**、解説記事は **[note](https://note.com/sepiablue)**（[記事INDEX](https://note.com/sepiablue/n/n8e612c619a3e)）で公開しています。
 
 Windows用の `setup.bat`、固定版の依存ノードを取得するインストーラー、GUI/API workflow、同じ検証用先頭画像を収録しています。モデルと変換キャッシュは別途必要です。配布フォルダ単独で導入でき、元の実験プロジェクトは不要です。
 
@@ -133,5 +155,20 @@ ComfyUIを普段の起動方法で起動し、[TaoMate_C3.json](workflows/TaoMat
 今回の配布確認と未実施項目は [VALIDATION.md](VALIDATION.md)、採用結果と除外した案は [RESULTS.md](docs/RESULTS.md) を参照してください。採用コードの原本SHA-256は [source-provenance.json](docs/source-provenance.json) に保存しています。
 
 セットアップはグローバルPythonへのpip、ComfyUI本体・Torch・Kitchenの自動更新、標準起動bat・共有モデル・ACLの変更を行いません。依存の固定版を更新するときはC3の内部APIとの整合を再検証してください。
+
+## 作者・関連リポジトリ
+
+かみもと（Kamimoto）です。RTX 4070 12GBで、MiniMax H3とComfyUIの高速化・省VRAM化を実測しながら公開しています。
+
+- X：[@sep_is_heim](https://x.com/sep_is_heim) — step数・秒数・短縮率などの検証速報
+- note：[かみもと｜ローカルAI生成](https://note.com/sepiablue) — 導入方法と実測の解説記事（[記事INDEX](https://note.com/sepiablue/n/n8e612c619a3e)）
+- [さやかベンチマーク](https://sayakabenchmark.pages.dev/) — H3ワークフローの速度・画質比較
+
+| リポジトリ | 内容 |
+|---|---|
+| [ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream) | X2 VAEのINT8化と非同期NVENC保存。1088×1920の音声付き5秒動画を約60秒で生成 |
+| [ComfyUI-MiniMax-H3-W4A4-VSA](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-W4A4-VSA) | Ref2VAの高速化（FC1 W4A4、Streaming VSA） |
+| [ComfyUI-H3-LBH-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-LBH-X2-Stream) | 低解像度3step＋高解像度1step。14秒動画で約25%短縮 |
+| [ComfyUI-MiniMax-H3-PDMD-X2](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-PDMD-X2) | PDMD 2step融合モデル。1088×1920の5秒動画を約44〜50秒 |
 
 ライセンスは [GPL-3.0-only](LICENSE)。外部プロジェクトは別途取得し、元の配布内容・ライセンスを維持します。[出典](THIRD_PARTY_NOTICES.md)を参照してください。

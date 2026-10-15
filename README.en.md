@@ -2,7 +2,29 @@
 
 [日本語](README.md) | English
 
-A **ComfyUI optimization package for running TaoMate-H3 on an RTX 4070 12GB**. It combines TaoMate 3-step, FC1 W4A4, 10% sparse attention, held FFN8 and held attention-out, with a Windows installer and sample workflows. **Actual 1024×1792, 124-frame generation with audio has been verified.**
+**A ComfyUI optimization package that generates TaoMate-H3 (MiniMax H3 distilled to 3 steps) at 1024×1792 with audio in about 2 min 27 s on an RTX 4070 12GB.** Includes a Windows installer and sample workflows.
+
+| FL2VA (one first frame), 1024×1792, 124 frames | Generation time |
+|---|---:|
+| 4 steps, W4A4 + Streaming VSA 5% (no TaoMate) | 218.2 s (3 min 38.2 s) |
+| TaoMate 3 steps + 10% sparse attention | 183.3 s (3 min 3.3 s) |
+| **This repo: TaoMate 3 steps + W4A4 + 10% sparse + held weights (C2/C3)** | **146.9 s (2 min 26.9 s)** |
+
+Measured on [Sayaka Benchmark](https://sayakabenchmark.pages.dev/), FL2VA tab, case01 (2026-09-30, one run each). The rows are FL2VA [018](https://sayakabenchmark.pages.dev/benchmarks/fl2va/018-w4a4-streaming-vsa5-i2v/workflow.json), [020](https://sayakabenchmark.pages.dev/benchmarks/fl2va/020-taomate-h3-fl2va-i2v-sparse10/workflow.json) and [021](https://sayakabenchmark.pages.dev/benchmarks/fl2va/021-taomate-h3-fl2va-i2v-c3-fastest/workflow.json) (entry numbers on the site). The step from row 2 to row 3 is about 20% and also includes the video VAE change (standard VAE → FastVAE).
+
+- **Reference:** sampling at 544×960 and saving 1088×1920 with [ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream) (FL2VA [016](https://sayakabenchmark.pages.dev/benchmarks/fl2va/016-taomate-3step-c3-sparse10-x2vae-int8-stream/workflow.json)) took 51.7 s. That workflow is not bundled here.
+
+**Terms**
+
+| Term | Meaning |
+|---|---|
+| TaoMate 3-step | Alibaba TaoLive's LoRA that lets H3 generate in 3 steps |
+| FC1 W4A4 | 4-bit weights and activations for the first FFN projection (FC1); converted once at install time |
+| 10% sparse attention | Computes only the important attention blocks (about 10% kept) |
+| C2 (held FFN8) | Runs the FFN in 8 chunks and keeps its weights where needed, reducing repeated transfers and casts |
+| C3 (held attention-out) | Also keeps the attention output layer's INT8 weights; about 3% faster than C2 |
+
+> Author: Kamimoto (かみもと) | Quick results on **[X (@sep_is_heim)](https://x.com/sep_is_heim)**, write-ups (Japanese) on **[note](https://note.com/sepiablue)** ([article index](https://note.com/sepiablue/n/n8e612c619a3e)).
 
 The package includes a Windows installer, locked custom-node dependencies, GUI/API workflows, and the original test first-frame image. Model weights and converted caches are separate. No files from the research project are required after copying this folder.
 
@@ -133,5 +155,20 @@ In the original controlled C2→C3 comparison, normal-cache warm time changed fr
 See [VALIDATION.md](VALIDATION.md) for packaging checks and untested items, [RESULTS.md](docs/RESULTS.md) for adopted/rejected options, and [source-provenance.json](docs/source-provenance.json) for original code hashes.
 
 Setup never uses global pip, upgrades ComfyUI/Torch/Kitchen, or edits standard launchers, shared models or ACLs. Revalidate C3's internal API dependencies before updating the locked upstream versions.
+
+## Author and related repositories
+
+I'm Kamimoto (かみもと). I measure and publish MiniMax H3 and ComfyUI speed-ups and VRAM reductions on an RTX 4070 12 GB.
+
+- X: [@sep_is_heim](https://x.com/sep_is_heim) — quick results with step counts, seconds and speed-ups
+- note: [かみもと｜ローカルAI生成](https://note.com/sepiablue) — setup guides and measured write-ups in Japanese ([article index](https://note.com/sepiablue/n/n8e612c619a3e))
+- [Sayaka Benchmark](https://sayakabenchmark.pages.dev/) — speed and quality comparison of H3 workflows
+
+| Repository | What it does |
+|---|---|
+| [ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream) | INT8 X2 VAE and asynchronous NVENC saving; 5 s 1088×1920 video with audio in about 60 s |
+| [ComfyUI-MiniMax-H3-W4A4-VSA](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-W4A4-VSA) | Ref2VA acceleration with FC1 W4A4 and Streaming VSA |
+| [ComfyUI-H3-LBH-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-LBH-X2-Stream) | 3 low-resolution steps + 1 high-resolution step; about 25% faster for 14 s video |
+| [ComfyUI-MiniMax-H3-PDMD-X2](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-PDMD-X2) | PDMD 2-step fused model; 5 s 1088×1920 video in about 44–50 s |
 
 This package is [GPL-3.0-only](LICENSE). External dependencies are fetched separately with their original distributions and notices. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
